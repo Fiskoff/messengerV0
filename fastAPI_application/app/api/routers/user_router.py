@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from app.api.schemas.user_schemas import UserRead, UserCreate
 from app.services.user_services import create_new_user
