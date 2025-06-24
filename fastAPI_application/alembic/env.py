@@ -9,6 +9,7 @@ from alembic import context
 
 from core.config import settings
 from core.models.base_model import BaseModel
+from core.models.user_model import UserModel
 
 
 # this is the Alembic Config object, which provides

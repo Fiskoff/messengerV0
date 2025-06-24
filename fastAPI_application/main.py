@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from uvicorn import run
 
-from app import main_router as api_router
+from app.api import main_router as api_router
 from core.config import settings
 
 
