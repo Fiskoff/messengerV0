@@ -4,6 +4,17 @@ from pydantic import BaseModel
 class UserSchema(BaseModel):
     name: str | None
     login: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "Sergey123",
+                "login": "fiskoff123",
+            }
+        }
+
+
+class UserCreate(UserSchema):
     password: str
 
     class Config:
@@ -11,13 +22,9 @@ class UserSchema(BaseModel):
             "example": {
                 "name": "Sergey123",
                 "login": "fiskoff123",
-                "password": "root123"
+                "password": "root123",
             }
         }
-
-
-class UserCreate(UserSchema):
-    pass
 
 
 class UserRead(UserSchema):
@@ -26,9 +33,8 @@ class UserRead(UserSchema):
     class Config:
         json_schema_extra = {
             "example": {
-                "id": 123,
                 "name": "Sergey123",
                 "login": "fiskoff123",
-                "password": "root123"
+                "id": 123,
             }
         }
