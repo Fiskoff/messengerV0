@@ -22,6 +22,13 @@ class ServerENV(EnvLoader):
     SERVER_PORT: int = int(getenv("SERVER_PORT"))
 
 
+class JwtENV(EnvLoader):
+    JWT_SECRET_KEY: str = getenv("JWT_SECRET_KEY")
+    JWT_ALGORITHM: str = getenv("JWT_ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    REFRESH_TOKEN_EXPIRE_DAYS: int = int(getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
+
+
 class RunConfig(BaseModel):
     host: str = ServerENV.SERVER_HOST
     port: int = ServerENV.SERVER_PORT
@@ -38,10 +45,18 @@ class DataBaseConfig(BaseModel):
     max_overflow: int = 15
 
 
+class JWTConfig(JwtENV):
+    secret_key: str = JwtENV.JWT_SECRET_KEY
+    algorithm: str = JwtENV.JWT_ALGORITHM
+    access_expire: str = JwtENV.ACCESS_TOKEN_EXPIRE_MINUTES
+    refresh_expire: str = JwtENV.REFRESH_TOKEN_EXPIRE_DAYS
+
+
 class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DataBaseConfig = DataBaseConfig()
+    jwt: JWTConfig = JWTConfig()
 
 
 settings = Settings()

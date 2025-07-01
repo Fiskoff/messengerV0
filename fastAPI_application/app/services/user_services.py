@@ -21,15 +21,11 @@ class Registration:
                 return True
 
 
-    def hash_password_new_user(self) -> str:
-        return PasswordManager.hash_password(self.password)
-
-
     async def create_new_user(self) -> UserRead | dict:
         async with db_helper.session_factory() as session:
             if self.check_login():
                 user_crud = UserCRUD(session)
-                new_user = await user_crud.create(user_name=self.name, user_login=self.login, user_password=self.hash_password_new_user())
+                new_user = await user_crud.create(user_name=self.name, user_login=self.login, user_password=PasswordManager.hash_password(self.password))
                 return UserRead(id=new_user.id, name=new_user.name, login=new_user.login)
             else:
                 return {"error": "login belongs to another"}
