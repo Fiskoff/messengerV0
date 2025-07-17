@@ -30,16 +30,3 @@ class UserRead(UserSchema):
                 "id": 123,
             }
         }
-
-
-class UserLogin(BaseModel):
-    login: str
-    password: str
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "login": "fiskoff123",
-                "password": "root123",
-            }
-        }
