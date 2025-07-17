@@ -26,7 +26,7 @@ class Registration:
 
     async def create_new_user(self) -> UserRead | dict:
         async with db_helper.session_factory() as session:
-            if self.check_login():
+            if await self.check_login():
                 user_crud = UserCRUD(session)
                 new_user = await user_crud.create(user_name=self.name, user_login=self.login, user_password=PasswordManager.hash_password(self.password))
                 return UserRead(id=new_user.id, name=new_user.name, login=new_user.login)
