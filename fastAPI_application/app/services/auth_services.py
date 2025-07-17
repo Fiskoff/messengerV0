@@ -5,6 +5,7 @@ from app.services.password_manager import PasswordManager
 from app.repositories.get_date_user import GetDateUser
 from app.services.create_jwt import CreateJWT
 from app.api.schemas.token_schemas import Token
+from core.models.user_model import UserModel
 
 
 class Registration:
@@ -33,3 +34,24 @@ class Registration:
                 return {"error": "login belongs to another"}
 
 
+class Authorization:
+    def __init__(self, login: str, password: str):
+        self.login = login
+        self.password = password
+
+    async def authorization(self) -> Token | None:
+        async with db_helper.session_factory() as session:
+            db_data = GetDateUser(session)
+            user: UserModel = await db_data.get_user_by_login(self.login)
+
+            if not user:
+                return None
+
+            if PasswordManager.verify_password(self.password, user.hash_password):
+                jwt_creator = CreateJWT()
+                return Token(
+                    access_token=jwt_creator.create_access_token({"id": user.id, "login": user.login}),
+                    refresh_token=jwt_creator.create_refresh_token({"sub": user.login}),
+                    token_type="bearer"
+                )
+        return None
