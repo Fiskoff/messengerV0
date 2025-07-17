@@ -16,7 +16,7 @@ async def register_user(user_data: UserCreate) -> UserRead | dict:
     return await new_registration.create_new_user()
 
 
-@auth_router.post("/login")
+@auth_router.post("/login", response_model=Token)
 async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
     auth_service = Authorization(login=form_data.username,password=form_data.password)
     tokens = await auth_service.authorization()
