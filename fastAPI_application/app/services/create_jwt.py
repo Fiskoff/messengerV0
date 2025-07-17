@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from passlib.context import CryptContext
-from jwt import encode, decode, exceptions
+from jwt import encode, decode, PyJWTError
 
 from core.config import settings
 
@@ -15,19 +15,19 @@ class CreateJWT:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-    def create_access_token(self, date: dict):
-        to_encode = date.copy()
+    def create_access_token(self, data: dict):
+        to_encode = data.copy()
         expire = datetime.now() + timedelta(minutes=self.__ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": expire, "token_type": "access"})
         return encode(to_encode, self.__SECRET_KEY, algorithm=self.__ALGORITHM)
 
-    def create_refresh_token(self, date: dict):
-        to_encode = date.copy()
+    def create_refresh_token(self, data: dict):
+        to_encode = data.copy()
         expire = datetime.now() + timedelta(days=self.__REFRESH_TOKEN_EXPIRE_DAYS)
         to_encode.update({"exp": expire, "token_type": "refresh"})
         return encode(to_encode, self.__SECRET_KEY, algorithm=self.__ALGORITHM)
 
-    def verify_token(self, token: str):
+    def verify_token(self, token: str) -> dict | None:
         try:
             payload = decode(
                 token,
@@ -35,6 +35,6 @@ class CreateJWT:
                 algorithms=[self.__ALGORITHM]
             )
             return payload
-        except exceptions as jwt_exception:
-            print(jwt_exception)
+        except PyJWTError as error:
+            print(error)
             return None
