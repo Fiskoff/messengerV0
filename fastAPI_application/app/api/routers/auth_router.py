@@ -1,10 +1,11 @@
 from fastapi import APIRouter, status, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.api.schemas.token_schemas import Token
+from app.api.schemas.token_schemas import Token, RefreshTokenRequest
 from app.api.schemas.user_schemas import UserRead, UserCreate
 from app.services.auth_services import Registration, Authorization
 from app.services.create_jwt import CreateJWT
+
 
 auth_router = APIRouter()
 
@@ -29,9 +30,9 @@ async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @auth_router.post("/refresh", response_model=Token)
-async def refresh_access_token(token: Token):
+async def refresh_access_token(request: RefreshTokenRequest):
     jwt_creator = CreateJWT()
-    payload = jwt_creator.verify_token(token.refresh_token)
+    payload = jwt_creator.verify_token(request.refresh_token)
 
     if not payload or payload.get("token_type") != "refresh":
         raise HTTPException(
