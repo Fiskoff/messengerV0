@@ -50,7 +50,7 @@ class Authorization:
             if PasswordManager.verify_password(self.password, user.hash_password):
                 jwt_creator = CreateJWT()
                 return Token(
-                    access_token=jwt_creator.create_access_token({"id": user.id, "login": user.login}),
+                    access_token=jwt_creator.create_access_token({"sub": user.login}),
                     refresh_token=jwt_creator.create_refresh_token({"sub": user.login}),
                     token_type="bearer"
                 )
