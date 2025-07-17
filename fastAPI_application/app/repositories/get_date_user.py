@@ -13,6 +13,6 @@ class GetDateUser:
         user = result.scalars().first()
         return user.hash_password
 
-    async def get_user_by_login(self, user_login: str) -> str | None:
+    async def get_user_by_login(self, user_login: str) -> UserModel | None:
         result = await self.session.execute(select(UserModel).where(UserModel.login == user_login))
         return result.scalars().first()
