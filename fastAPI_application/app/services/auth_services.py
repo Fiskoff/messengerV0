@@ -1,3 +1,5 @@
+from fastapi import HTTPException, status
+
 from core.db_helper import db_helper
 from app.repositories.user_crud import UserCRUD
 from app.api.schemas.user_schemas import UserCreate, UserRead
@@ -31,7 +33,10 @@ class Registration:
                 new_user = await user_crud.create(user_name=self.name, user_login=self.login, user_password=PasswordManager.hash_password(self.password))
                 return UserRead(id=new_user.id, name=new_user.name, login=new_user.login)
             else:
-                return {"error": "login belongs to another"}
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Login already exists"
+                )
 
 
 class Authorization:
@@ -42,7 +47,7 @@ class Authorization:
     async def authorization(self) -> Token | None:
         async with db_helper.session_factory() as session:
             db_data = GetDateUser(session)
-            user: UserModel = await db_data.get_user_by_login(self.login)
+            user = await db_data.get_user_by_login(self.login)
 
             if not user:
                 return None
