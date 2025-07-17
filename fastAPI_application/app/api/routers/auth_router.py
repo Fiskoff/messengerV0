@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
 from app.api.schemas.user_schemas import UserRead, UserCreate
-from app.services.user_services import Registration
+from app.services.auth_services import Registration
 
 auth_router = APIRouter()
 

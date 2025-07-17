@@ -3,6 +3,8 @@ from app.repositories.user_crud import UserCRUD
 from app.api.schemas.user_schemas import UserCreate, UserRead
 from app.services.password_manager import PasswordManager
 from app.repositories.get_date_user import GetDateUser
+from app.services.create_jwt import CreateJWT
+from app.api.schemas.token_schemas import Token
 
 
 class Registration:
@@ -15,7 +17,7 @@ class Registration:
     async def check_login(self) -> bool | None:
         async with db_helper.session_factory() as session:
             db_date = GetDateUser(session)
-            result = await db_date.get_login(self.login)
+            result = await db_date.get_user_by_login(self.login)
 
             if result is None:
                 return True
@@ -29,3 +31,5 @@ class Registration:
                 return UserRead(id=new_user.id, name=new_user.name, login=new_user.login)
             else:
                 return {"error": "login belongs to another"}
+
+
