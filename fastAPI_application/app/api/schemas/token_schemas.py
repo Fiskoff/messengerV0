@@ -9,3 +9,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     login: str | None = None
+
+
+class TokenResponse(Token):
+    pass
